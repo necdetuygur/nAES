@@ -1,3 +1,9 @@
+// https://github.com/necdetuygur/nAES
+// string print = "";
+// print += "Encoded: " + nAES.Encrypt("test", "1234") + "\r\n";
+// print += "Decoded: " + nAES.Decrypt(nAES.Encrypt("test", "1234"), "1234");
+// Console.WriteLine(print);
+
 using System;
 using System.IO;
 using System.Security.Cryptography;
@@ -46,19 +52,33 @@ namespace Cryptology {
             return decryptedBytes;
         }
         public static string Encrypt(string input, string password) {
-            byte[] bytesToBeEncrypted = Encoding.UTF8.GetBytes(input);
-            byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
-            passwordBytes = SHA256.Create().ComputeHash(passwordBytes);
-            byte[] bytesEncrypted = AES_Encrypt(bytesToBeEncrypted, passwordBytes);
-            string result = Convert.ToBase64String(bytesEncrypted);
+            string result = "";
+            if (!String.IsNullOrEmpty(input)) {
+                try {
+                    byte[] bytesToBeEncrypted = Encoding.UTF8.GetBytes(input);
+                    byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+                    passwordBytes = SHA256.Create().ComputeHash(passwordBytes);
+                    byte[] bytesEncrypted = AES_Encrypt(bytesToBeEncrypted, passwordBytes);
+                    result = Convert.ToBase64String(bytesEncrypted);
+                } catch (Exception ex) {
+                    Console.WriteLine(ex.Message);
+                }
+            }
             return result;
         }
         public static string Decrypt(string input, string password) {
-            byte[] bytesToBeDecrypted = Convert.FromBase64String(input);
-            byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
-            passwordBytes = SHA256.Create().ComputeHash(passwordBytes);
-            byte[] bytesDecrypted = AES_Decrypt(bytesToBeDecrypted, passwordBytes);
-            string result = Encoding.UTF8.GetString(bytesDecrypted);
+            string result = "";
+            if (!String.IsNullOrEmpty(input)) {
+                try {
+                    byte[] bytesToBeDecrypted = Convert.FromBase64String(input);
+                    byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+                    passwordBytes = SHA256.Create().ComputeHash(passwordBytes);
+                    byte[] bytesDecrypted = AES_Decrypt(bytesToBeDecrypted, passwordBytes);
+                    result = Encoding.UTF8.GetString(bytesDecrypted);
+                } catch (Exception ex) {
+                    Console.WriteLine(ex.Message);
+                }
+            }
             return result;
         }
     }
